@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EDIB Techniek",
-  description: "EDIB Techniek — binnenkort online.",
+  title: "Edib Techniek — Airco's, laadpalen & thuisbatterijen",
+  description:
+    "Edib Techniek installeert airco's, laadpalen en thuisbatterijen, vakkundig geplaatst door onze eigen monteurs. Slimmer wonen met je eigen energie.",
 };
 
 export default function RootLayout({
