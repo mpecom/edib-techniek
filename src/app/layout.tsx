@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Edib Techniek — Airco's, laadpalen & thuisbatterijen",
+  title: "Edib Techniek — Daikin airco, warmtepompen & cv-ketels",
   description:
-    "Edib Techniek installeert airco's, laadpalen en thuisbatterijen, vakkundig geplaatst door onze eigen monteurs. Slimmer wonen met je eigen energie.",
+    "Erkend installateur van Daikin airco's, warmtepompen en cv-ketels. Vakkundig geïnstalleerd en onderhouden door onze eigen monteurs. Bereken hoeveel je bespaart met verwarmen via airco in plaats van gas.",
 };
 
 export default function RootLayout({
