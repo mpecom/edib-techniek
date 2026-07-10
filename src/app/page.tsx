@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import BespaarModule from "./BespaarModule";
 import AircoUnit from "./AircoUnit";
+import AircoSlider from "./AircoSlider";
 
 /* ---------------------------------------------------------------- data --- */
 
@@ -11,142 +12,6 @@ const NAV = [
   { href: "#onderhoud", label: "Onderhoud" },
   { href: "#contact", label: "Contact" },
 ];
-
-/* --- Echte Daikin wandmodellen (specs indicatief, kleinste klasse) -------- */
-type Finish = "white" | "silver" | "black" | "blackwood";
-type Model = {
-  id: string;
-  name: string;
-  code: string;
-  position: string;
-  tone: "white" | "silver" | "graphite";
-  sculpted?: boolean;
-  featured?: boolean;
-  blurb: string;
-  finishes: Finish[];
-  specs: [string, string][];
-};
-
-const DAIKIN: Model[] = [
-  {
-    id: "perfera",
-    name: "Perfera",
-    code: "FTXM-A",
-    position: "Beste voor verwarmen",
-    tone: "white",
-    featured: true,
-    blurb:
-      "De all-rounder voor het hele jaar. Verwarmt betrouwbaar tot −20 °C met 3D-luchtstroom en Heat Boost — gemaakt voor Nederlandse winters.",
-    finishes: ["white", "black"],
-    specs: [
-      ["Vermogen", "2,0–7,1 kW"],
-      ["Energielabel", "A+++ / A+++"],
-      ["SEER / SCOP", "8,65 / 5,10"],
-      ["Geluid", "19 dB(A)"],
-      ["Wifi", "standaard"],
-    ],
-  },
-  {
-    id: "emura",
-    name: "Emura",
-    code: "FTXJ-A",
-    position: "Design-icoon",
-    tone: "silver",
-    sculpted: true,
-    blurb:
-      "Sculpturaal, gebogen aluminium front. Een statement aan de muur, met ingebouwde aanwezigheidssensor en Onecta-bediening.",
-    finishes: ["white", "silver", "black"],
-    specs: [
-      ["Vermogen", "2,0–5,0 kW"],
-      ["Energielabel", "A+++ / A+++"],
-      ["SEER / SCOP", "8,75 / 5,15"],
-      ["Geluid", "19 dB(A)"],
-      ["Wifi", "standaard"],
-    ],
-  },
-  {
-    id: "stylish",
-    name: "Stylish",
-    code: "FTXA-A",
-    position: "Slankst · 189 mm",
-    tone: "graphite",
-    blurb:
-      "Ultravlak, slechts 189 mm diep, met Flash Streamer luchtreiniging. In vier afwerkingen — óók blackwood.",
-    finishes: ["white", "silver", "black", "blackwood"],
-    specs: [
-      ["Vermogen", "2,0–5,0 kW"],
-      ["Energielabel", "A+++ / A+++"],
-      ["SEER / SCOP", "8,75 / 5,15"],
-      ["Geluid", "19 dB(A)"],
-      ["Wifi", "standaard"],
-    ],
-  },
-  {
-    id: "comfora",
-    name: "Comfora",
-    code: "FTXP-M",
-    position: "Prijs-kwaliteit",
-    tone: "white",
-    blurb:
-      "Betrouwbaar comfort zonder franje. Stil en zuinig — een uitstekende keuze voor slaapkamer of thuiskantoor.",
-    finishes: ["white"],
-    specs: [
-      ["Vermogen", "2,0–7,1 kW"],
-      ["Energielabel", "A++ / A++"],
-      ["SEER / SCOP", "7,3 / 4,6"],
-      ["Geluid", "19–20 dB(A)"],
-      ["Wifi", "optioneel"],
-    ],
-  },
-  {
-    id: "sensira",
-    name: "Sensira",
-    code: "FTXF-D",
-    position: "Instapmodel",
-    tone: "white",
-    blurb:
-      "Scherp geprijsd instapmodel met de betrouwbaarheid van Daikin. Voor kostenbewuste installaties zonder concessies aan kwaliteit.",
-    finishes: ["white"],
-    specs: [
-      ["Vermogen", "2,0–7,1 kW"],
-      ["Energielabel", "A++ / A+"],
-      ["SEER / SCOP", "6,5 / 4,3"],
-      ["Geluid", "vanaf 20 dB(A)"],
-      ["Wifi", "optioneel"],
-    ],
-  },
-  {
-    id: "multi",
-    name: "Multi-split",
-    code: "MXM-A",
-    position: "Meerdere ruimtes",
-    tone: "silver",
-    blurb:
-      "Eén buitenunit voor meerdere binnenunits. Combineer Perfera, Emura en Stylish en regel elke kamer apart.",
-    finishes: ["white", "silver", "black", "blackwood"],
-    specs: [
-      ["Binnenunits", "2 tot 5"],
-      ["Modellen", "vrij te mixen"],
-      ["Regeling", "per ruimte"],
-      ["Buitenunit", "1 compact"],
-      ["Wifi", "per unit"],
-    ],
-  },
-];
-
-const FINISH_LABEL: Record<Finish, string> = {
-  white: "Mat wit",
-  silver: "Zilver",
-  black: "Mat zwart",
-  blackwood: "Blackwood",
-};
-
-const SWATCH: Record<Finish, string> = {
-  white: "bg-white",
-  silver: "bg-gradient-to-br from-slate-100 to-slate-400",
-  black: "bg-neutral-900",
-  blackwood: "bg-gradient-to-br from-neutral-700 to-neutral-950",
-};
 
 /* --- Diensten naast airco ------------------------------------------------- */
 const SERVICES = [
@@ -282,20 +147,6 @@ function PrimaryButton({ href, children }: { href: string; children: ReactNode }
     >
       {children}
     </a>
-  );
-}
-
-function FinishDots({ finishes }: { finishes: Finish[] }) {
-  return (
-    <div className="flex items-center gap-1.5">
-      {finishes.map((f) => (
-        <span
-          key={f}
-          title={FINISH_LABEL[f]}
-          className={`h-3.5 w-3.5 rounded-full ring-1 ring-black/10 ${SWATCH[f]}`}
-        />
-      ))}
-    </div>
   );
 }
 
@@ -448,69 +299,6 @@ function TrustBar() {
 
 /* --------------------------------------------------------- airco/daikin --- */
 
-function SpecList({ specs }: { specs: [string, string][] }) {
-  return (
-    <dl className="mt-5 divide-y divide-line border-y border-line">
-      {specs.map(([k, v]) => (
-        <div key={k} className="flex items-center justify-between py-2">
-          <dt className="text-sm text-muted">{k}</dt>
-          <dd className="font-mono text-sm font-medium text-ink">{v}</dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
-function ModelCard({ m }: { m: Model }) {
-  return (
-    <article
-      id={m.id}
-      className={`group relative flex scroll-mt-24 flex-col overflow-hidden rounded-2xl border bg-card p-5 transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-24px_rgba(11,21,38,0.35)] ${
-        m.featured ? "border-teal/40 ring-1 ring-teal/25" : "border-line"
-      }`}
-    >
-      {m.featured && (
-        <span className="absolute right-4 top-4 z-10 rounded-full bg-teal px-3 py-1 font-mono text-[10px] font-medium uppercase tracking-wider text-white">
-          Meest gekozen
-        </span>
-      )}
-
-      {/* render op frost-achtergrond */}
-      <div className="relative flex h-36 items-center justify-center rounded-xl bg-gradient-to-br from-frost/70 to-white ring-1 ring-inset ring-line">
-        <AircoUnit tone={m.tone} sculpted={m.sculpted} className="w-[78%]" />
-      </div>
-
-      <div className="mt-5 flex items-baseline justify-between gap-2">
-        <div>
-          <h3 className="font-display text-xl font-semibold text-ink">Daikin {m.name}</h3>
-          <p className="font-mono text-xs uppercase tracking-wider text-teal">{m.position}</p>
-        </div>
-        <span className="font-mono text-xs text-muted">{m.code}</span>
-      </div>
-
-      <p className="mt-3 text-sm leading-6 text-muted">{m.blurb}</p>
-
-      <SpecList specs={m.specs} />
-
-      <div className="mt-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <FinishDots finishes={m.finishes} />
-          <span className="text-xs text-muted">
-            {m.finishes.length} {m.finishes.length === 1 ? "afwerking" : "afwerkingen"}
-          </span>
-        </div>
-      </div>
-
-      <a
-        href="#contact"
-        className="mt-5 inline-flex items-center justify-center rounded-full border border-line px-4 py-2.5 text-sm font-semibold text-ink transition group-hover:border-teal group-hover:text-teal"
-      >
-        Vraag prijs op
-      </a>
-    </article>
-  );
-}
-
 function Airco() {
   return (
     <section id="airco" className="scroll-mt-16 py-20 sm:py-28">
@@ -537,10 +325,8 @@ function Airco() {
           </div>
         </div>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {DAIKIN.map((m) => (
-            <ModelCard key={m.id} m={m} />
-          ))}
+        <div className="mt-12">
+          <AircoSlider />
         </div>
 
         <p className="mt-8 text-sm text-muted">

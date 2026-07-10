@@ -57,6 +57,15 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* horizontale slider zonder zichtbare scrollbar */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
