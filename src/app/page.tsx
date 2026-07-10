@@ -1,96 +1,171 @@
 import type { ReactNode } from "react";
 import BespaarModule from "./BespaarModule";
+import AircoUnit from "./AircoUnit";
 
 /* ---------------------------------------------------------------- data --- */
 
 const NAV = [
-  { href: "#airco", label: "Airco" },
+  { href: "#airco", label: "Daikin airco" },
   { href: "#bespaarmodule", label: "Bespaarcheck" },
-  { href: "#warmtepompen", label: "Warmtepompen" },
-  { href: "#cv-ketels", label: "CV-ketels" },
+  { href: "#diensten", label: "Diensten" },
   { href: "#onderhoud", label: "Onderhoud" },
   { href: "#contact", label: "Contact" },
 ];
 
-/* --- Daikin airco-modellen (echte modellen; specs indicatief) ------------ */
-const DAIKIN = [
-  {
-    id: "stylish",
-    name: "Daikin Stylish",
-    tag: "Design",
-    featured: false,
-    body: "Compacte designunit met een strak front in wit, zilver of blackwood. Ingebouwde wifi en intelligente sensoren.",
-    specs: ["Vanaf 19 dB(A)", "Energielabel tot A+++", "2,0 – 4,2 kW", "Wifi standaard"],
-    finish: "from-sky-100 to-white",
-  },
+/* --- Echte Daikin wandmodellen (specs indicatief, kleinste klasse) -------- */
+type Finish = "white" | "silver" | "black" | "blackwood";
+type Model = {
+  id: string;
+  name: string;
+  code: string;
+  position: string;
+  tone: "white" | "silver" | "graphite";
+  sculpted?: boolean;
+  featured?: boolean;
+  blurb: string;
+  finishes: Finish[];
+  specs: [string, string][];
+};
+
+const DAIKIN: Model[] = [
   {
     id: "perfera",
-    name: "Daikin Perfera",
-    tag: "Zuinigst",
+    name: "Perfera",
+    code: "FTXM-A",
+    position: "Beste voor verwarmen",
+    tone: "white",
     featured: true,
-    body: "Onze bestseller. Topefficiëntie, uitstekende verwarmingsprestaties tot -15 °C en fluisterstil dankzij de 3D-luchtstroom.",
-    specs: ["Vanaf 19 dB(A)", "Energielabel A+++ / A+++", "2,0 – 7,1 kW", "Verwarmt tot −15 °C"],
-    finish: "from-emerald-100 to-white",
+    blurb:
+      "De all-rounder voor het hele jaar. Verwarmt betrouwbaar tot −20 °C met 3D-luchtstroom en Heat Boost — gemaakt voor Nederlandse winters.",
+    finishes: ["white", "black"],
+    specs: [
+      ["Vermogen", "2,0–7,1 kW"],
+      ["Energielabel", "A+++ / A+++"],
+      ["SEER / SCOP", "8,65 / 5,10"],
+      ["Geluid", "19 dB(A)"],
+      ["Wifi", "standaard"],
+    ],
   },
   {
     id: "emura",
-    name: "Daikin Emura",
-    tag: "Premium",
-    featured: false,
-    body: "Iconisch, in aluminium uitgevoerd design. Een statement aan de muur met de prestaties van Daikin's topklasse.",
-    specs: ["Vanaf 19 dB(A)", "Energielabel tot A+++", "2,0 – 5,0 kW", "Aluminium afwerking"],
-    finish: "from-slate-100 to-white",
+    name: "Emura",
+    code: "FTXJ-A",
+    position: "Design-icoon",
+    tone: "silver",
+    sculpted: true,
+    blurb:
+      "Sculpturaal, gebogen aluminium front. Een statement aan de muur, met ingebouwde aanwezigheidssensor en Onecta-bediening.",
+    finishes: ["white", "silver", "black"],
+    specs: [
+      ["Vermogen", "2,0–5,0 kW"],
+      ["Energielabel", "A+++ / A+++"],
+      ["SEER / SCOP", "8,75 / 5,15"],
+      ["Geluid", "19 dB(A)"],
+      ["Wifi", "standaard"],
+    ],
+  },
+  {
+    id: "stylish",
+    name: "Stylish",
+    code: "FTXA-A",
+    position: "Slankst · 189 mm",
+    tone: "graphite",
+    blurb:
+      "Ultravlak, slechts 189 mm diep, met Flash Streamer luchtreiniging. In vier afwerkingen — óók blackwood.",
+    finishes: ["white", "silver", "black", "blackwood"],
+    specs: [
+      ["Vermogen", "2,0–5,0 kW"],
+      ["Energielabel", "A+++ / A+++"],
+      ["SEER / SCOP", "8,75 / 5,15"],
+      ["Geluid", "19 dB(A)"],
+      ["Wifi", "standaard"],
+    ],
   },
   {
     id: "comfora",
-    name: "Daikin Comfora",
-    tag: "Comfort",
-    featured: false,
-    body: "De ideale alrounder voor dagelijks comfort. Betrouwbaar koelen en verwarmen tegen een aantrekkelijke prijs.",
-    specs: ["Vanaf 20 dB(A)", "Energielabel tot A++", "2,0 – 6,0 kW", "Wifi optioneel"],
-    finish: "from-amber-100 to-white",
+    name: "Comfora",
+    code: "FTXP-M",
+    position: "Prijs-kwaliteit",
+    tone: "white",
+    blurb:
+      "Betrouwbaar comfort zonder franje. Stil en zuinig — een uitstekende keuze voor slaapkamer of thuiskantoor.",
+    finishes: ["white"],
+    specs: [
+      ["Vermogen", "2,0–7,1 kW"],
+      ["Energielabel", "A++ / A++"],
+      ["SEER / SCOP", "7,3 / 4,6"],
+      ["Geluid", "19–20 dB(A)"],
+      ["Wifi", "optioneel"],
+    ],
   },
   {
     id: "sensira",
-    name: "Daikin Sensira",
-    tag: "Instapmodel",
-    featured: false,
-    body: "Scherp geprijsd instapmodel met de betrouwbaarheid van Daikin. Perfect voor een slaapkamer of thuiskantoor.",
-    specs: ["Vanaf 20 dB(A)", "Energielabel tot A++", "2,0 – 5,0 kW", "Beste prijs/kwaliteit"],
-    finish: "from-indigo-100 to-white",
+    name: "Sensira",
+    code: "FTXF-D",
+    position: "Instapmodel",
+    tone: "white",
+    blurb:
+      "Scherp geprijsd instapmodel met de betrouwbaarheid van Daikin. Voor kostenbewuste installaties zonder concessies aan kwaliteit.",
+    finishes: ["white"],
+    specs: [
+      ["Vermogen", "2,0–7,1 kW"],
+      ["Energielabel", "A++ / A+"],
+      ["SEER / SCOP", "6,5 / 4,3"],
+      ["Geluid", "vanaf 20 dB(A)"],
+      ["Wifi", "optioneel"],
+    ],
   },
   {
     id: "multi",
-    name: "Daikin Multi-split",
-    tag: "Meerdere ruimtes",
-    featured: false,
-    body: "Eén buitenunit voor meerdere binnenunits. Koel en verwarm woonkamer, slaapkamers en kantoor met één systeem.",
-    specs: ["2 tot 5 binnenunits", "Combineer alle modellen", "Ruimtebesparend", "Individueel regelbaar"],
-    finish: "from-teal-100 to-white",
+    name: "Multi-split",
+    code: "MXM-A",
+    position: "Meerdere ruimtes",
+    tone: "silver",
+    blurb:
+      "Eén buitenunit voor meerdere binnenunits. Combineer Perfera, Emura en Stylish en regel elke kamer apart.",
+    finishes: ["white", "silver", "black", "blackwood"],
+    specs: [
+      ["Binnenunits", "2 tot 5"],
+      ["Modellen", "vrij te mixen"],
+      ["Regeling", "per ruimte"],
+      ["Buitenunit", "1 compact"],
+      ["Wifi", "per unit"],
+    ],
   },
 ];
+
+const FINISH_LABEL: Record<Finish, string> = {
+  white: "Mat wit",
+  silver: "Zilver",
+  black: "Mat zwart",
+  blackwood: "Blackwood",
+};
+
+const SWATCH: Record<Finish, string> = {
+  white: "bg-white",
+  silver: "bg-gradient-to-br from-slate-100 to-slate-400",
+  black: "bg-neutral-900",
+  blackwood: "bg-gradient-to-br from-neutral-700 to-neutral-950",
+};
 
 /* --- Diensten naast airco ------------------------------------------------- */
 const SERVICES = [
   {
     id: "warmtepompen",
-    icon: "🌡️",
     tag: "Warmtepompen",
     title: "Duurzaam verwarmen zonder gas",
-    body: "Hybride of volledig elektrische warmtepompen van Daikin (Altherma). Lagere energierekening, aardgasvrij en klaar voor de toekomst — met advies over de ISDE-subsidie.",
-    specs: ["Hybride & all-electric", "Daikin Altherma", "Geschikt voor lage temperatuur", "ISDE-subsidie mogelijk"],
+    body: "Hybride of volledig elektrische Daikin Altherma warmtepompen. Lagere energierekening, aardgasvrij en klaar voor de toekomst — met advies over de ISDE-subsidie.",
+    specs: ["Hybride & all-electric", "Daikin Altherma", "Lage-temperatuur geschikt", "ISDE-subsidie mogelijk"],
   },
   {
     id: "cv-ketels",
-    icon: "🔥",
     tag: "CV-ketels",
     title: "Vervanging & installatie van cv-ketels",
     body: "Toe aan een nieuwe ketel? Wij leveren en plaatsen zuinige HR-ketels van A-merken zoals Remeha, Intergas en Nefit. Snel gepland, netjes afgemonteerd.",
-    specs: ["HR-ketels A-merken", "Remeha · Intergas · Nefit", "Snelle plaatsing", "Inclusief inbedrijfstelling"],
+    specs: ["HR-ketels A-merken", "Remeha · Intergas · Nefit", "Snelle plaatsing", "Incl. inbedrijfstelling"],
   },
   {
-    id: "onderhoud",
-    icon: "🛠️",
+    id: "onderhoud-dienst",
     tag: "Onderhoud & service",
     title: "Onderhoud aan airco, warmtepomp & cv",
     body: "Periodiek onderhoud houdt je installatie zuinig, gezond en storingsvrij. Met een servicecontract regelen wij de jaarlijkse controle automatisch voor je.",
@@ -126,7 +201,7 @@ const PLANS = [
   },
 ];
 
-/* --- Werkwijze ------------------------------------------------------------ */
+/* --- Werkwijze (echte volgorde: proces van 4 stappen) --------------------- */
 const STEPS = [
   { n: "01", title: "Vrijblijvend advies", body: "We bespreken je wensen en de ruimte — telefonisch of bij je thuis. Je ontvangt een heldere offerte." },
   { n: "02", title: "Vakkundige installatie", body: "Onze eigen F-gassen gecertificeerde monteurs plaatsen je installatie netjes en op afspraak." },
@@ -146,11 +221,11 @@ const USPS = [
 const FAQ = [
   {
     q: "Welke Daikin airco past bij mij?",
-    a: "Dat hangt af van de ruimte, isolatie en jouw wensen op het gebied van design en geluid. Wij adviseren vrijblijvend welk model en vermogen het beste past — van de zuinige Perfera tot de designvolle Stylish.",
+    a: "Dat hangt af van de ruimte, isolatie en jouw wensen op het gebied van design en geluid. Wij adviseren vrijblijvend welk model en vermogen het beste past — van de zuinige Perfera tot de designvolle Emura.",
   },
   {
     q: "Kan een airco ook verwarmen?",
-    a: "Ja. Een moderne Daikin-airco is een lucht-lucht warmtepomp en verwarmt zeer efficiënt, ook bij vriestemperaturen. Zo bespaar je in het tussenseizoen op je gasverbruik.",
+    a: "Ja. Een moderne Daikin-airco is een lucht-lucht warmtepomp en verwarmt zeer efficiënt, ook bij vriestemperaturen — de Perfera zelfs tot −20 °C. Zo bespaar je flink op je gasverbruik.",
   },
   {
     q: "Krijg ik subsidie op een warmtepomp?",
@@ -179,9 +254,9 @@ const CONTACT = {
 
 /* ---------------------------------------------------------------- atoms --- */
 
-function Check() {
+function Check({ className = "text-teal" }: { className?: string }) {
   return (
-    <svg aria-hidden viewBox="0 0 20 20" className="mt-0.5 h-5 w-5 flex-none text-emerald-500" fill="currentColor">
+    <svg aria-hidden viewBox="0 0 20 20" className={`mt-0.5 h-4.5 w-4.5 flex-none ${className}`} fill="currentColor">
       <path d="M16.7 5.3a1 1 0 0 1 0 1.4l-7.5 7.5a1 1 0 0 1-1.42 0L3.3 9.7a1 1 0 1 1 1.4-1.42l3.07 3.06 6.8-6.79a1 1 0 0 1 1.42 0Z" />
     </svg>
   );
@@ -191,63 +266,88 @@ function Container({ children, className = "" }: { children: ReactNode; classNam
   return <div className={`mx-auto w-full max-w-6xl px-6 ${className}`}>{children}</div>;
 }
 
+function Eyebrow({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
+  return (
+    <p className={`font-mono text-xs font-medium uppercase tracking-[0.2em] ${dark ? "text-teal-bright" : "text-teal"}`}>
+      {children}
+    </p>
+  );
+}
+
 function PrimaryButton({ href, children }: { href: string; children: ReactNode }) {
   return (
     <a
       href={href}
-      className="inline-flex items-center justify-center rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600"
+      className="inline-flex items-center justify-center rounded-full bg-teal px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-bright focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal"
     >
       {children}
     </a>
   );
 }
 
+function FinishDots({ finishes }: { finishes: Finish[] }) {
+  return (
+    <div className="flex items-center gap-1.5">
+      {finishes.map((f) => (
+        <span
+          key={f}
+          title={FINISH_LABEL[f]}
+          className={`h-3.5 w-3.5 rounded-full ring-1 ring-black/10 ${SWATCH[f]}`}
+        />
+      ))}
+    </div>
+  );
+}
+
 /* -------------------------------------------------------------- header ---- */
+
+function Logo({ onDark = false }: { onDark?: boolean }) {
+  return (
+    <a href="#top" className={`flex items-center gap-2.5 font-display text-lg font-semibold tracking-tight ${onDark ? "text-white" : "text-ink"}`}>
+      <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-teal font-mono text-sm font-medium text-white">E</span>
+      Edib <span className={onDark ? "text-white/40" : "text-muted"}>Techniek</span>
+    </a>
+  );
+}
 
 function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/85 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-line/80 bg-paper/80 backdrop-blur">
       <Container className="flex h-16 items-center justify-between">
-        <a href="#top" className="flex items-center gap-2 text-lg font-semibold tracking-tight text-slate-900">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500 text-white">E</span>
-          Edib <span className="text-slate-400">Techniek</span>
-        </a>
+        <Logo />
 
-        <nav className="hidden items-center gap-6 text-sm font-medium text-slate-600 lg:flex">
+        <nav className="hidden items-center gap-7 text-sm font-medium text-muted lg:flex">
           {NAV.map((item) => (
-            <a key={item.href} href={item.href} className="transition hover:text-slate-900">
+            <a key={item.href} href={item.href} className="transition hover:text-ink">
               {item.label}
             </a>
           ))}
         </nav>
 
         <div className="flex items-center gap-3">
-          <a
-            href={CONTACT.phoneHref}
-            className="hidden text-sm font-semibold text-slate-700 transition hover:text-emerald-600 sm:inline-block"
-          >
+          <a href={CONTACT.phoneHref} className="hidden font-mono text-sm font-medium text-ink transition hover:text-teal sm:inline-block">
             {CONTACT.phone}
           </a>
           <a
             href="#contact"
-            className="hidden rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-600 sm:inline-block"
+            className="hidden rounded-full bg-teal px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-bright sm:inline-block"
           >
             Offerte aanvragen
           </a>
 
           <details className="relative lg:hidden">
-            <summary className="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-lg border border-slate-200 text-slate-700 [&::-webkit-details-marker]:hidden">
+            <summary className="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-lg border border-line text-ink [&::-webkit-details-marker]:hidden">
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" />
               </svg>
             </summary>
-            <div className="absolute right-0 mt-2 w-52 rounded-xl border border-slate-200 bg-white p-2 shadow-lg">
+            <div className="absolute right-0 mt-2 w-56 rounded-xl border border-line bg-card p-2 shadow-lg">
               {NAV.map((item) => (
-                <a key={item.href} href={item.href} className="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
+                <a key={item.href} href={item.href} className="block rounded-lg px-3 py-2 text-sm text-ink hover:bg-paper">
                   {item.label}
                 </a>
               ))}
-              <a href="#contact" className="mt-1 block rounded-lg bg-emerald-500 px-3 py-2 text-center text-sm font-semibold text-white">
+              <a href="#contact" className="mt-1 block rounded-lg bg-teal px-3 py-2 text-center text-sm font-semibold text-white">
                 Offerte aanvragen
               </a>
             </div>
@@ -262,21 +362,24 @@ function Header() {
 
 function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden bg-slate-900 text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_60%_at_80%_-10%,rgba(16,185,129,0.28),transparent)]" />
-      <Container className="relative grid gap-12 py-24 md:grid-cols-2 md:items-center md:py-28">
+    <section id="top" className="relative overflow-hidden bg-ink text-white">
+      {/* koel → warm klimaatmotief */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_78%_-5%,rgba(20,184,166,0.30),transparent),radial-gradient(50%_50%_at_10%_110%,rgba(245,158,11,0.14),transparent)]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-teal-bright/60 to-transparent" />
+      <Container className="relative grid gap-14 py-20 md:grid-cols-[1.05fr_0.95fr] md:items-center md:py-28">
         <div>
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-emerald-300">
-            Erkend Daikin-installateur · eigen monteurs
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-xs tracking-wide text-teal-bright">
+            Erkend Daikin-installateur
           </span>
-          <h1 className="mt-5 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-            Airco laten installeren?<br />Het hele jaar comfortabel.
+          <h1 className="mt-6 font-display text-[2.7rem] font-semibold leading-[1.05] tracking-tight text-balance sm:text-6xl">
+            Koelen én verwarmen.<br />
+            <span className="text-teal-bright">Het hele jaar door.</span>
           </h1>
-          <p className="mt-5 max-w-md text-lg text-slate-300">
-            Specialist in Daikin airco&apos;s — koelen én verwarmen, fluisterstil en zuinig. Daarnaast warmtepompen, cv-ketels en onderhoud. Vakkundig geïnstalleerd door onze eigen monteurs.
+          <p className="mt-6 max-w-md text-lg leading-relaxed text-white/70">
+            Specialist in Daikin airco&apos;s — fluisterstil, zuinig en verwarmen tot −20 °C. Daarnaast warmtepompen, cv-ketels en onderhoud, geplaatst door onze eigen monteurs.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <PrimaryButton href="#airco">Bekijk Daikin airco&apos;s</PrimaryButton>
+            <PrimaryButton href="#airco">Bekijk Daikin-modellen</PrimaryButton>
             <a
               href="#bespaarmodule"
               className="inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
@@ -284,42 +387,40 @@ function Hero() {
               Bereken je besparing
             </a>
           </div>
-          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-400">
-            <span className="flex items-center gap-2"><Check /> F-gassen gecertificeerd</span>
-            <span className="flex items-center gap-2"><Check /> 5 jaar garantie</span>
-            <span className="flex items-center gap-2"><Check /> 4,9★ beoordeeld</span>
+          <div className="mt-9 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/60">
+            <span className="flex items-center gap-2"><Check className="text-teal-bright" /> F-gassen gecertificeerd</span>
+            <span className="flex items-center gap-2"><Check className="text-teal-bright" /> 5 jaar garantie</span>
+            <span className="flex items-center gap-2"><Check className="text-teal-bright" /> 4,9★ beoordeeld</span>
           </div>
         </div>
 
+        {/* productkaart: Emura render als statement */}
         <div className="relative">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+          <div className="rounded-3xl border border-white/10 bg-white/[0.06] p-6 backdrop-blur-sm">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-xs font-medium uppercase tracking-widest text-emerald-300">Bestseller</div>
-                <div className="mt-1 text-lg font-semibold">Daikin Perfera</div>
+                <div className="font-mono text-xs uppercase tracking-[0.2em] text-teal-bright">Design-icoon</div>
+                <div className="mt-1 font-display text-xl font-semibold">Daikin Emura</div>
               </div>
-              <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-semibold text-emerald-300">A+++</span>
+              <span className="rounded-full bg-teal/20 px-3 py-1 font-mono text-xs font-medium text-teal-bright">A+++</span>
             </div>
-            <div className="mt-5 aspect-[4/3] rounded-xl bg-gradient-to-br from-white/15 to-white/5 p-4">
-              <div className="flex h-full flex-col justify-between rounded-lg bg-white/5 p-4">
-                <div className="h-2 w-16 rounded-full bg-white/20" />
-                <div className="self-end text-right text-4xl">❄️</div>
-              </div>
+
+            <div className="mt-6 rounded-2xl bg-gradient-to-br from-white/12 to-white/[0.03] p-6">
+              <AircoUnit tone="silver" sculpted className="w-full drop-shadow-xl" />
             </div>
-            <div className="mt-4 grid grid-cols-3 gap-3 text-center">
-              <div className="rounded-xl bg-white/5 p-3">
-                <div className="text-sm font-semibold text-emerald-300">19 dB</div>
-                <div className="mt-1 text-[11px] text-slate-400">fluisterstil</div>
-              </div>
-              <div className="rounded-xl bg-white/5 p-3">
-                <div className="text-sm font-semibold text-emerald-300">−15 °C</div>
-                <div className="mt-1 text-[11px] text-slate-400">verwarmt</div>
-              </div>
-              <div className="rounded-xl bg-white/5 p-3">
-                <div className="text-sm font-semibold text-emerald-300">Wifi</div>
-                <div className="mt-1 text-[11px] text-slate-400">standaard</div>
-              </div>
-            </div>
+
+            <dl className="mt-5 grid grid-cols-3 gap-2 text-center">
+              {[
+                ["19 dB", "fluisterstil"],
+                ["−20 °C", "verwarmt"],
+                ["Wifi", "Onecta-app"],
+              ].map(([v, l]) => (
+                <div key={l} className="rounded-xl bg-white/5 py-3">
+                  <dt className="font-mono text-sm font-medium text-teal-bright">{v}</dt>
+                  <dd className="mt-1 text-[11px] text-white/50">{l}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
       </Container>
@@ -330,13 +431,15 @@ function Hero() {
 /* --------------------------------------------------------- logos/trust ---- */
 
 function TrustBar() {
-  const brands = ["Daikin", "Remeha", "Intergas", "Nefit", "Mitsubishi"];
+  const brands = ["Daikin", "Remeha", "Intergas", "Nefit", "Mitsubishi Heavy"];
   return (
-    <section className="border-b border-slate-200 bg-slate-50 py-6">
-      <Container className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-sm font-semibold uppercase tracking-widest text-slate-400">
-        <span className="text-xs normal-case tracking-normal text-slate-500">Wij werken met A-merken:</span>
+    <section className="border-b border-line bg-card">
+      <Container className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3 py-6">
+        <span className="text-xs text-muted">Wij werken met A-merken</span>
         {brands.map((b) => (
-          <span key={b}>{b}</span>
+          <span key={b} className="font-display text-sm font-semibold tracking-tight text-ink/40">
+            {b}
+          </span>
         ))}
       </Container>
     </section>
@@ -345,61 +448,105 @@ function TrustBar() {
 
 /* --------------------------------------------------------- airco/daikin --- */
 
+function SpecList({ specs }: { specs: [string, string][] }) {
+  return (
+    <dl className="mt-5 divide-y divide-line border-y border-line">
+      {specs.map(([k, v]) => (
+        <div key={k} className="flex items-center justify-between py-2">
+          <dt className="text-sm text-muted">{k}</dt>
+          <dd className="font-mono text-sm font-medium text-ink">{v}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+function ModelCard({ m }: { m: Model }) {
+  return (
+    <article
+      id={m.id}
+      className={`group relative flex scroll-mt-24 flex-col overflow-hidden rounded-2xl border bg-card p-5 transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-24px_rgba(11,21,38,0.35)] ${
+        m.featured ? "border-teal/40 ring-1 ring-teal/25" : "border-line"
+      }`}
+    >
+      {m.featured && (
+        <span className="absolute right-4 top-4 z-10 rounded-full bg-teal px-3 py-1 font-mono text-[10px] font-medium uppercase tracking-wider text-white">
+          Meest gekozen
+        </span>
+      )}
+
+      {/* render op frost-achtergrond */}
+      <div className="relative flex h-36 items-center justify-center rounded-xl bg-gradient-to-br from-frost/70 to-white ring-1 ring-inset ring-line">
+        <AircoUnit tone={m.tone} sculpted={m.sculpted} className="w-[78%]" />
+      </div>
+
+      <div className="mt-5 flex items-baseline justify-between gap-2">
+        <div>
+          <h3 className="font-display text-xl font-semibold text-ink">Daikin {m.name}</h3>
+          <p className="font-mono text-xs uppercase tracking-wider text-teal">{m.position}</p>
+        </div>
+        <span className="font-mono text-xs text-muted">{m.code}</span>
+      </div>
+
+      <p className="mt-3 text-sm leading-6 text-muted">{m.blurb}</p>
+
+      <SpecList specs={m.specs} />
+
+      <div className="mt-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <FinishDots finishes={m.finishes} />
+          <span className="text-xs text-muted">
+            {m.finishes.length} {m.finishes.length === 1 ? "afwerking" : "afwerkingen"}
+          </span>
+        </div>
+      </div>
+
+      <a
+        href="#contact"
+        className="mt-5 inline-flex items-center justify-center rounded-full border border-line px-4 py-2.5 text-sm font-semibold text-ink transition group-hover:border-teal group-hover:text-teal"
+      >
+        Vraag prijs op
+      </a>
+    </article>
+  );
+}
+
 function Airco() {
   return (
-    <section id="airco" className="scroll-mt-20 py-20 sm:py-24">
+    <section id="airco" className="scroll-mt-16 py-20 sm:py-28">
       <Container>
-        <div className="max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-widest text-emerald-600">Daikin airco&apos;s</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-            Kies jouw Daikin airco
-          </h2>
-          <p className="mt-4 text-lg text-slate-600">
-            Van designicoon tot de zuinigste in zijn klasse. Elke Daikin koelt in de zomer én verwarmt in de winter — zuinig en fluisterstil. Wij adviseren welk model en vermogen bij jouw ruimte past.
-          </p>
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <div className="max-w-2xl">
+            <Eyebrow>Daikin airco&apos;s</Eyebrow>
+            <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-ink text-balance sm:text-4xl">
+              Het volledige Daikin-assortiment
+            </h2>
+            <p className="mt-4 text-lg leading-relaxed text-muted">
+              Van het designicoon Emura tot de zuinige Perfera. Elke Daikin koelt in de zomer én verwarmt in de winter. Wij adviseren welk model, vermogen en afwerking bij jouw ruimte past.
+            </p>
+          </div>
+          <div className="flex gap-6 font-mono text-sm text-muted">
+            <div>
+              <span className="block font-display text-2xl font-semibold text-ink">A+++</span>
+              top-energielabel
+            </div>
+            <div>
+              <span className="block font-display text-2xl font-semibold text-ink">19 dB</span>
+              fluisterstil
+            </div>
+          </div>
         </div>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {DAIKIN.map((m) => (
-            <div
-              key={m.id}
-              id={m.id}
-              className={`relative flex scroll-mt-24 flex-col overflow-hidden rounded-2xl border bg-white p-6 shadow-sm transition hover:shadow-md ${
-                m.featured ? "border-emerald-300 ring-1 ring-emerald-200" : "border-slate-200"
-              }`}
-            >
-              {m.featured && (
-                <span className="absolute right-4 top-4 rounded-full bg-emerald-500 px-3 py-1 text-[11px] font-semibold text-white">
-                  Meest gekozen
-                </span>
-              )}
-              <div className={`flex h-28 items-center justify-center rounded-xl bg-gradient-to-br ${m.finish}`}>
-                <span className="text-4xl">❄️</span>
-              </div>
-              <p className="mt-5 text-xs font-semibold uppercase tracking-widest text-emerald-600">{m.tag}</p>
-              <h3 className="mt-1 text-xl font-semibold text-slate-900">{m.name}</h3>
-              <p className="mt-3 text-sm leading-6 text-slate-600">{m.body}</p>
-              <ul className="mt-5 space-y-2 text-sm text-slate-700">
-                {m.specs.map((s) => (
-                  <li key={s} className="flex gap-2">
-                    <Check />
-                    <span>{s}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-6 pt-2">
-                <a href="#contact" className="text-sm font-semibold text-emerald-600 hover:text-emerald-700">
-                  Vraag prijs op →
-                </a>
-              </div>
-            </div>
+            <ModelCard key={m.id} m={m} />
           ))}
         </div>
 
-        <p className="mt-8 text-sm text-slate-500">
-          Ook Mitsubishi Heavy Industries en andere A-merken zijn mogelijk. Twijfel je over de keuze?{" "}
-          <a href="#contact" className="font-semibold text-emerald-600 hover:text-emerald-700">
-            Vraag gratis advies aan.
+        <p className="mt-8 text-sm text-muted">
+          Specs gelden voor de kleinste capaciteitsklasse; grotere modellen kunnen afwijken. Ook Mitsubishi Heavy Industries is mogelijk.{" "}
+          <a href="#contact" className="font-semibold text-teal hover:text-teal-bright">
+            Vraag gratis advies aan →
           </a>
         </p>
       </Container>
@@ -411,30 +558,29 @@ function Airco() {
 
 function Services() {
   return (
-    <section className="bg-slate-50 py-20 sm:py-24">
+    <section id="diensten" className="scroll-mt-16 bg-card py-20 sm:py-28">
       <Container>
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-widest text-emerald-600">Meer dan airco</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-            Alles voor verwarmen & koelen
+          <Eyebrow>Meer dan airco</Eyebrow>
+          <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-ink text-balance sm:text-4xl">
+            Alles voor verwarmen &amp; koelen
           </h2>
-          <p className="mt-4 text-lg text-slate-600">
+          <p className="mt-4 text-lg leading-relaxed text-muted">
             Naast airco zijn we ook je specialist voor warmtepompen, cv-ketels en het onderhoud daarvan — onder één dak geregeld.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="mt-12 grid gap-5 md:grid-cols-3">
           {SERVICES.map((s) => (
             <div
               key={s.id}
               id={s.id}
-              className="flex scroll-mt-20 flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md"
+              className="flex scroll-mt-16 flex-col rounded-2xl border border-line bg-paper p-6 transition hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-24px_rgba(11,21,38,0.3)]"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-2xl">{s.icon}</div>
-              <p className="mt-5 text-xs font-semibold uppercase tracking-widest text-emerald-600">{s.tag}</p>
-              <h3 className="mt-2 text-xl font-semibold text-slate-900">{s.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-slate-600">{s.body}</p>
-              <ul className="mt-5 space-y-2 text-sm text-slate-700">
+              <p className="font-mono text-xs uppercase tracking-wider text-teal">{s.tag}</p>
+              <h3 className="mt-2 font-display text-xl font-semibold text-ink">{s.title}</h3>
+              <p className="mt-3 text-sm leading-6 text-muted">{s.body}</p>
+              <ul className="mt-5 space-y-2 text-sm text-ink/80">
                 {s.specs.map((x) => (
                   <li key={x} className="flex gap-2">
                     <Check />
@@ -442,11 +588,9 @@ function Services() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-6 pt-2">
-                <a href="#contact" className="text-sm font-semibold text-emerald-600 hover:text-emerald-700">
-                  Meer weten →
-                </a>
-              </div>
+              <a href="#contact" className="mt-6 text-sm font-semibold text-teal hover:text-teal-bright">
+                Meer weten →
+              </a>
             </div>
           ))}
         </div>
@@ -459,61 +603,57 @@ function Services() {
 
 function Onderhoud() {
   return (
-    <section id="onderhoud" className="scroll-mt-20 py-20 sm:py-24">
+    <section id="onderhoud" className="scroll-mt-16 py-20 sm:py-28">
       <Container>
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-widest text-emerald-600">Onderhoud & service</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+          <Eyebrow>Onderhoud &amp; service</Eyebrow>
+          <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-ink text-balance sm:text-4xl">
             Houd je installatie zuinig en gezond
           </h2>
-          <p className="mt-4 text-lg text-slate-600">
+          <p className="mt-4 text-lg leading-relaxed text-muted">
             Regelmatig onderhoud voorkomt storingen, verlaagt je verbruik en houdt de lucht schoon. Kies een losse beurt of laat het jaarlijks automatisch regelen.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="mt-12 grid gap-5 md:grid-cols-3">
           {PLANS.map((p) => (
             <div
               key={p.name}
-              className={`flex flex-col rounded-2xl border p-6 shadow-sm ${
-                p.highlight ? "border-emerald-300 bg-slate-900 text-white ring-1 ring-emerald-300" : "border-slate-200 bg-white"
+              className={`flex flex-col rounded-2xl border p-6 ${
+                p.highlight ? "border-teal/40 bg-ink text-white ring-1 ring-teal/30" : "border-line bg-card"
               }`}
             >
               {p.highlight && (
-                <span className="mb-4 inline-flex w-fit rounded-full bg-emerald-500 px-3 py-1 text-[11px] font-semibold text-white">
+                <span className="mb-4 inline-flex w-fit rounded-full bg-teal px-3 py-1 font-mono text-[10px] font-medium uppercase tracking-wider text-white">
                   Meest gekozen
                 </span>
               )}
-              <h3 className={`text-lg font-semibold ${p.highlight ? "text-white" : "text-slate-900"}`}>{p.name}</h3>
-              <div className="mt-3 flex items-baseline gap-1">
-                <span className={`text-3xl font-semibold ${p.highlight ? "text-emerald-300" : "text-slate-900"}`}>{p.price}</span>
-                <span className={`text-sm ${p.highlight ? "text-slate-300" : "text-slate-500"}`}>{p.period}</span>
+              <h3 className={`font-display text-lg font-semibold ${p.highlight ? "text-white" : "text-ink"}`}>{p.name}</h3>
+              <div className="mt-3 flex items-baseline gap-1.5">
+                <span className={`font-display text-3xl font-semibold ${p.highlight ? "text-teal-bright" : "text-ink"}`}>{p.price}</span>
+                <span className={`font-mono text-sm ${p.highlight ? "text-white/60" : "text-muted"}`}>{p.period}</span>
               </div>
-              <p className={`mt-3 text-sm leading-6 ${p.highlight ? "text-slate-300" : "text-slate-600"}`}>{p.body}</p>
-              <ul className={`mt-5 space-y-2 text-sm ${p.highlight ? "text-slate-200" : "text-slate-700"}`}>
+              <p className={`mt-3 text-sm leading-6 ${p.highlight ? "text-white/70" : "text-muted"}`}>{p.body}</p>
+              <ul className={`mt-5 space-y-2 text-sm ${p.highlight ? "text-white/90" : "text-ink/80"}`}>
                 {p.points.map((pt) => (
                   <li key={pt} className="flex gap-2">
-                    <Check />
+                    <Check className={p.highlight ? "text-teal-bright" : "text-teal"} />
                     <span>{pt}</span>
                   </li>
                 ))}
               </ul>
-              <div className="mt-6 pt-2">
-                <a
-                  href="#contact"
-                  className={`inline-flex w-full items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition ${
-                    p.highlight
-                      ? "bg-emerald-500 text-white hover:bg-emerald-600"
-                      : "border border-slate-300 text-slate-800 hover:bg-slate-50"
-                  }`}
-                >
-                  Aanvragen
-                </a>
-              </div>
+              <a
+                href="#contact"
+                className={`mt-6 inline-flex w-full items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition ${
+                  p.highlight ? "bg-teal text-white hover:bg-teal-bright" : "border border-line text-ink hover:border-teal hover:text-teal"
+                }`}
+              >
+                Aanvragen
+              </a>
             </div>
           ))}
         </div>
-        <p className="mt-6 text-sm text-slate-500">Prijzen zijn indicatief en inclusief btw. Exacte prijs op basis van je installatie.</p>
+        <p className="mt-6 font-mono text-xs text-muted">Prijzen zijn indicatief en inclusief btw. Exacte prijs op basis van je installatie.</p>
       </Container>
     </section>
   );
@@ -523,22 +663,22 @@ function Onderhoud() {
 
 function Werkwijze() {
   return (
-    <section id="werkwijze" className="scroll-mt-20 bg-slate-50 py-20 sm:py-24">
+    <section className="bg-card py-20 sm:py-28">
       <Container>
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-widest text-emerald-600">Werkwijze</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">Zo werken wij</h2>
-          <p className="mt-4 text-lg text-slate-600">Van eerste advies tot service achteraf — helder en zonder gedoe.</p>
+          <Eyebrow>Werkwijze</Eyebrow>
+          <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-ink text-balance sm:text-4xl">Zo werken wij</h2>
+          <p className="mt-4 text-lg leading-relaxed text-muted">Van eerste advies tot service achteraf — helder en zonder gedoe.</p>
         </div>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <ol className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {STEPS.map((s) => (
-            <div key={s.n} className="rounded-2xl border border-slate-200 bg-white p-6">
-              <div className="text-sm font-semibold text-emerald-500">{s.n}</div>
-              <h3 className="mt-3 text-lg font-semibold text-slate-900">{s.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-600">{s.body}</p>
-            </div>
+            <li key={s.n} className="rounded-2xl border border-line bg-paper p-6">
+              <div className="font-mono text-sm font-medium text-teal">{s.n}</div>
+              <h3 className="mt-3 font-display text-lg font-semibold text-ink">{s.title}</h3>
+              <p className="mt-2 text-sm leading-6 text-muted">{s.body}</p>
+            </li>
           ))}
-        </div>
+        </ol>
       </Container>
     </section>
   );
@@ -548,22 +688,25 @@ function Werkwijze() {
 
 function Usps() {
   return (
-    <section className="py-20 sm:py-24">
+    <section className="py-20 sm:py-28">
       <Container className="grid gap-12 md:grid-cols-2 md:items-center">
         <div>
-          <h2 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">Waarom Edib Techniek</h2>
-          <p className="mt-4 text-lg text-slate-600">
-            Als erkend installateur regelen wij het van begin tot eind. Vakwerk, eerlijke prijzen en service waar je op kunt rekenen.
+          <Eyebrow>Waarom Edib Techniek</Eyebrow>
+          <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-ink text-balance sm:text-4xl">
+            Vakwerk waar je op kunt rekenen
+          </h2>
+          <p className="mt-4 text-lg leading-relaxed text-muted">
+            Als erkend installateur regelen wij het van begin tot eind. Eerlijke prijzen, eigen monteurs en service ook ná de installatie.
           </p>
           <div className="mt-8">
             <PrimaryButton href="#contact">Plan een gesprek</PrimaryButton>
           </div>
         </div>
-        <ul className="grid gap-4 sm:grid-cols-2">
+        <ul className="grid gap-3 sm:grid-cols-2">
           {USPS.map((u) => (
-            <li key={u} className="flex gap-3 rounded-xl border border-slate-200 bg-white p-4">
+            <li key={u} className="flex gap-3 rounded-xl border border-line bg-card p-4">
               <Check />
-              <span className="text-sm font-medium text-slate-800">{u}</span>
+              <span className="text-sm font-medium text-ink/90">{u}</span>
             </li>
           ))}
         </ul>
@@ -576,17 +719,18 @@ function Usps() {
 
 function Faq() {
   return (
-    <section className="bg-slate-50 py-20 sm:py-24">
+    <section className="bg-card py-20 sm:py-28">
       <Container>
-        <h2 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">Veelgestelde vragen</h2>
-        <div className="mt-10 grid gap-4 md:grid-cols-2">
+        <Eyebrow>Veelgestelde vragen</Eyebrow>
+        <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-ink text-balance sm:text-4xl">Goed om te weten</h2>
+        <div className="mt-10 grid gap-3 md:grid-cols-2">
           {FAQ.map((s) => (
-            <details key={s.q} className="group rounded-2xl border border-slate-200 bg-white p-6 open:shadow-md">
-              <summary className="flex cursor-pointer list-none items-start justify-between gap-3 text-base font-semibold text-slate-900 [&::-webkit-details-marker]:hidden">
+            <details key={s.q} className="group rounded-2xl border border-line bg-paper p-6 open:shadow-sm">
+              <summary className="flex cursor-pointer list-none items-start justify-between gap-3 font-display text-base font-semibold text-ink [&::-webkit-details-marker]:hidden">
                 {s.q}
-                <span className="mt-1 text-emerald-500 transition group-open:rotate-45">＋</span>
+                <span className="mt-0.5 font-mono text-teal transition group-open:rotate-45">+</span>
               </summary>
-              <p className="mt-3 text-sm leading-6 text-slate-600">{s.a}</p>
+              <p className="mt-3 text-sm leading-6 text-muted">{s.a}</p>
             </details>
           ))}
         </div>
@@ -599,20 +743,21 @@ function Faq() {
 
 function About() {
   return (
-    <section className="bg-slate-900 py-20 text-white sm:py-24">
-      <Container className="grid gap-12 md:grid-cols-2 md:items-center">
+    <section className="relative overflow-hidden bg-ink py-20 text-white sm:py-28">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_60%_at_85%_0%,rgba(20,184,166,0.22),transparent)]" />
+      <Container className="relative grid gap-12 md:grid-cols-2 md:items-center">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">Over ons</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Jouw specialist in klimaat & comfort</h2>
-          <p className="mt-4 text-lg text-slate-300">
-            Edib Techniek installeert airco&apos;s, warmtepompen en cv-ketels met eigen, gecertificeerde monteurs — en houdt ze daarna draaiend met onderhoud en service. Persoonlijk advies, strakke planning en werk waar je op kunt rekenen.
+          <Eyebrow dark>Over ons</Eyebrow>
+          <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-balance sm:text-4xl">Jouw specialist in klimaat &amp; comfort</h2>
+          <p className="mt-4 text-lg leading-relaxed text-white/70">
+            Edib Techniek installeert Daikin airco&apos;s, warmtepompen en cv-ketels met eigen, gecertificeerde monteurs — en houdt ze daarna draaiend met onderhoud en service. Persoonlijk advies, strakke planning en werk waar je op kunt rekenen.
           </p>
         </div>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-3">
           {STATS.map((s) => (
             <div key={s.label} className="rounded-2xl border border-white/10 bg-white/5 p-5 text-center">
-              <div className="text-2xl font-semibold text-emerald-300 sm:text-3xl">{s.value}</div>
-              <div className="mt-2 text-xs leading-5 text-slate-300">{s.label}</div>
+              <div className="font-display text-2xl font-semibold text-teal-bright sm:text-3xl">{s.value}</div>
+              <div className="mt-2 text-xs leading-5 text-white/60">{s.label}</div>
             </div>
           ))}
         </div>
@@ -625,42 +770,43 @@ function About() {
 
 function Contact() {
   return (
-    <section id="contact" className="scroll-mt-20 py-20 sm:py-24">
+    <section id="contact" className="scroll-mt-16 py-20 sm:py-28">
       <Container>
-        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-8 sm:p-12">
-          <div className="grid gap-10 md:grid-cols-2">
-            <div>
-              <h2 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">Vraag je gratis offerte aan</h2>
-              <p className="mt-4 text-lg text-slate-600">
+        <div className="overflow-hidden rounded-3xl border border-line bg-card">
+          <div className="grid md:grid-cols-2">
+            <div className="p-8 sm:p-12">
+              <Eyebrow>Contact</Eyebrow>
+              <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-ink text-balance sm:text-4xl">Vraag je gratis offerte aan</h2>
+              <p className="mt-4 text-lg leading-relaxed text-muted">
                 Benieuwd welke airco, warmtepomp of ketel bij je past? Onze specialisten denken vrijblijvend met je mee — bel, mail of app ons.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <PrimaryButton href={CONTACT.phoneHref}>Bel {CONTACT.phone}</PrimaryButton>
                 <a
                   href={CONTACT.whatsapp}
-                  className="inline-flex items-center justify-center rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-800 transition hover:bg-white"
+                  className="inline-flex items-center justify-center rounded-full border border-line px-6 py-3 text-sm font-semibold text-ink transition hover:border-teal hover:text-teal"
                 >
                   Stuur een WhatsApp
                 </a>
               </div>
             </div>
-            <div className="space-y-4 rounded-2xl bg-white p-6">
-              <div>
-                <div className="text-xs font-semibold uppercase tracking-widest text-slate-400">Telefoon</div>
-                <a href={CONTACT.phoneHref} className="text-lg font-medium text-slate-900 hover:text-emerald-600">
-                  {CONTACT.phone}
-                </a>
-              </div>
-              <div>
-                <div className="text-xs font-semibold uppercase tracking-widest text-slate-400">E-mail</div>
-                <a href={`mailto:${CONTACT.email}`} className="text-lg font-medium text-slate-900 hover:text-emerald-600">
-                  {CONTACT.email}
-                </a>
-              </div>
-              <div>
-                <div className="text-xs font-semibold uppercase tracking-widest text-slate-400">Adres</div>
-                <div className="text-lg font-medium text-slate-900">{CONTACT.address}</div>
-              </div>
+            <div className="space-y-5 border-t border-line bg-paper p-8 sm:p-12 md:border-l md:border-t-0">
+              {[
+                ["Telefoon", CONTACT.phone, CONTACT.phoneHref],
+                ["E-mail", CONTACT.email, `mailto:${CONTACT.email}`],
+                ["Adres", CONTACT.address, null],
+              ].map(([label, value, href]) => (
+                <div key={label as string}>
+                  <div className="font-mono text-xs uppercase tracking-[0.2em] text-muted">{label}</div>
+                  {href ? (
+                    <a href={href as string} className="font-display text-lg font-medium text-ink transition hover:text-teal">
+                      {value}
+                    </a>
+                  ) : (
+                    <div className="font-display text-lg font-medium text-ink">{value}</div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -673,57 +819,52 @@ function Contact() {
 
 function Footer() {
   return (
-    <footer className="border-t border-slate-200 bg-white py-14">
+    <footer className="border-t border-line bg-card py-14">
       <Container>
         <div className="grid gap-10 md:grid-cols-4">
-          <div className="md:col-span-1">
-            <div className="flex items-center gap-2 text-lg font-semibold tracking-tight text-slate-900">
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500 text-white">E</span>
-              Edib Techniek
-            </div>
-            <p className="mt-4 max-w-xs text-sm leading-6 text-slate-600">
+          <div>
+            <Logo />
+            <p className="mt-4 max-w-xs text-sm leading-6 text-muted">
               Erkend installateur van Daikin airco&apos;s, warmtepompen en cv-ketels. Vakkundig geplaatst en onderhouden door onze eigen monteurs.
             </p>
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-slate-900">Diensten</div>
-            <ul className="mt-4 space-y-2 text-sm text-slate-600">
-              <li><a href="#airco" className="hover:text-slate-900">Airco</a></li>
-              <li><a href="#warmtepompen" className="hover:text-slate-900">Warmtepompen</a></li>
-              <li><a href="#cv-ketels" className="hover:text-slate-900">CV-ketels</a></li>
-              <li><a href="#onderhoud" className="hover:text-slate-900">Onderhoud</a></li>
+            <div className="font-display text-sm font-semibold text-ink">Diensten</div>
+            <ul className="mt-4 space-y-2 text-sm text-muted">
+              <li><a href="#airco" className="hover:text-ink">Daikin airco</a></li>
+              <li><a href="#warmtepompen" className="hover:text-ink">Warmtepompen</a></li>
+              <li><a href="#cv-ketels" className="hover:text-ink">CV-ketels</a></li>
+              <li><a href="#onderhoud" className="hover:text-ink">Onderhoud</a></li>
             </ul>
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-slate-900">Bedrijf</div>
-            <ul className="mt-4 space-y-2 text-sm text-slate-600">
-              <li><a href="#werkwijze" className="hover:text-slate-900">Werkwijze</a></li>
-              <li><a href="#contact" className="hover:text-slate-900">Contact</a></li>
-              <li><a href="#contact" className="hover:text-slate-900">Offerte aanvragen</a></li>
+            <div className="font-display text-sm font-semibold text-ink">Bedrijf</div>
+            <ul className="mt-4 space-y-2 text-sm text-muted">
+              <li><a href="#bespaarmodule" className="hover:text-ink">Bespaarcheck</a></li>
+              <li><a href="#contact" className="hover:text-ink">Contact</a></li>
+              <li><a href="#contact" className="hover:text-ink">Offerte aanvragen</a></li>
             </ul>
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-slate-900">Contact</div>
-            <ul className="mt-4 space-y-2 text-sm text-slate-600">
-              <li><a href={CONTACT.phoneHref} className="hover:text-slate-900">{CONTACT.phone}</a></li>
-              <li><a href={`mailto:${CONTACT.email}`} className="hover:text-slate-900">{CONTACT.email}</a></li>
+            <div className="font-display text-sm font-semibold text-ink">Contact</div>
+            <ul className="mt-4 space-y-2 text-sm text-muted">
+              <li><a href={CONTACT.phoneHref} className="font-mono hover:text-ink">{CONTACT.phone}</a></li>
+              <li><a href={`mailto:${CONTACT.email}`} className="hover:text-ink">{CONTACT.email}</a></li>
               <li>{CONTACT.address}</li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-4 border-t border-slate-200 pt-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2026 Edib Techniek · KvK 00000000 · BTW NL000000000B00</p>
+        <div className="mt-12 flex flex-col gap-4 border-t border-line pt-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+          <p className="font-mono text-xs">© 2026 Edib Techniek · KvK 00000000 · BTW NL000000000B00</p>
           <div className="flex flex-wrap gap-x-5 gap-y-2">
-            <a href="#" className="hover:text-slate-900">Privacybeleid</a>
-            <a href="#" className="hover:text-slate-900">Algemene voorwaarden</a>
-            <a href="#" className="hover:text-slate-900">Cookiebeleid</a>
-            <span className="text-slate-300">·</span>
-            <a href="#" className="hover:text-slate-900">Instagram</a>
-            <a href="#" className="hover:text-slate-900">Facebook</a>
+            <a href="#" className="hover:text-ink">Privacybeleid</a>
+            <a href="#" className="hover:text-ink">Algemene voorwaarden</a>
+            <a href="#" className="hover:text-ink">Instagram</a>
+            <a href="#" className="hover:text-ink">Facebook</a>
           </div>
         </div>
       </Container>

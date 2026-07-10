@@ -1,15 +1,38 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------- tokens -- */
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
+  --ink: #0b1526;          /* deep blue-black ground */
+  --ink-soft: #14243a;
+  --paper: #f6f8fb;        /* blue-biased off-white */
+  --card: #ffffff;
+  --line: #e4e9f0;         /* blue-biased border */
+  --text: #0b1526;
+  --muted: #56697d;        /* blue-grey */
+  --teal: #0d9488;         /* primary accent */
+  --teal-bright: #14b8a6;
+  --frost: #cffafe;        /* cool tint */
+  --warm: #f59e0b;         /* heating cue only */
+  --foreground: var(--text);
+  --background: var(--paper);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-paper: var(--paper);
+  --color-card: var(--card);
+  --color-line: var(--line);
+  --color-muted: var(--muted);
+  --color-teal: var(--teal);
+  --color-teal-bright: var(--teal-bright);
+  --color-frost: var(--frost);
+  --color-warm: var(--warm);
+  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
 }
 
 html {
@@ -20,5 +43,26 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

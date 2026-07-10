@@ -47,8 +47,8 @@ function Slider({
   return (
     <label className="block">
       <div className="flex items-baseline justify-between">
-        <span className="text-sm font-medium text-slate-700">{label}</span>
-        <span className="text-sm font-semibold text-slate-900">
+        <span className="text-sm font-medium text-muted">{label}</span>
+        <span className="font-mono text-sm font-medium text-ink">
           {format ? format(value) : value}
           {suffix ? ` ${suffix}` : ""}
         </span>
@@ -60,7 +60,7 @@ function Slider({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-emerald-500"
+        className="mt-2 h-1.5 w-full cursor-pointer appearance-none rounded-full bg-line accent-teal"
         aria-label={label}
       />
     </label>
@@ -90,24 +90,25 @@ export default function BespaarModule() {
   }, [gasM3, gasPrijs, stroomPrijs, scop]);
 
   return (
-    <section id="bespaarmodule" className="scroll-mt-20 bg-slate-900 py-20 text-white sm:py-24">
-      <div className="mx-auto w-full max-w-6xl px-6">
+    <section id="bespaarmodule" className="relative scroll-mt-16 overflow-hidden bg-ink py-20 text-white sm:py-28">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_60%_at_15%_-10%,rgba(20,184,166,0.22),transparent),radial-gradient(45%_50%_at_95%_110%,rgba(245,158,11,0.12),transparent)]" />
+      <div className="relative mx-auto w-full max-w-6xl px-6">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">Bespaarmodule</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-            Bereken je besparing: verwarmen met airco i.p.v. gas
+          <p className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-teal-bright">Bespaarcheck</p>
+          <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+            Verwarmen met airco i.p.v. gas — wat levert het op?
           </h2>
-          <p className="mt-4 text-lg text-slate-300">
+          <p className="mt-4 text-lg leading-relaxed text-white/70">
             Een moderne Daikin-airco is een lucht-lucht warmtepomp: uit 1 kWh stroom haalt hij tot 4–5 kWh warmte.
             Schuif met de waarden en zie direct wat je bespaart ten opzichte van je cv-ketel.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-8 lg:grid-cols-2 lg:items-start">
+        <div className="mt-12 grid gap-6 lg:grid-cols-2 lg:items-start">
           {/* Invoer */}
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8">
-            <div className="space-y-6">
-              <div className="rounded-xl bg-white p-5 text-slate-900">
+          <div className="rounded-3xl border border-white/10 bg-white/[0.06] p-6 sm:p-8">
+            <div className="space-y-4">
+              <div className="rounded-xl bg-card p-5">
                 <Slider
                   label="Gasverbruik dat je vervangt"
                   value={gasM3}
@@ -118,7 +119,7 @@ export default function BespaarModule() {
                   onChange={setGasM3}
                 />
               </div>
-              <div className="rounded-xl bg-white p-5 text-slate-900">
+              <div className="rounded-xl bg-card p-5">
                 <Slider
                   label="Gasprijs"
                   value={gasPrijs}
@@ -130,7 +131,7 @@ export default function BespaarModule() {
                   onChange={setGasPrijs}
                 />
               </div>
-              <div className="rounded-xl bg-white p-5 text-slate-900">
+              <div className="rounded-xl bg-card p-5">
                 <Slider
                   label="Stroomprijs"
                   value={stroomPrijs}
@@ -142,7 +143,7 @@ export default function BespaarModule() {
                   onChange={setStroomPrijs}
                 />
               </div>
-              <div className="rounded-xl bg-white p-5 text-slate-900">
+              <div className="rounded-xl bg-card p-5">
                 <Slider
                   label="Rendement airco (SCOP)"
                   value={scop}
@@ -153,7 +154,7 @@ export default function BespaarModule() {
                   suffix="× warmte per kWh"
                   onChange={setScop}
                 />
-                <p className="mt-2 text-xs text-slate-500">
+                <p className="mt-2 text-xs text-muted">
                   Daikin-airco&apos;s halen in de praktijk een SCOP van circa 4,0 tot 5,1.
                 </p>
               </div>
@@ -161,43 +162,38 @@ export default function BespaarModule() {
           </div>
 
           {/* Resultaat */}
-          <div className="rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/15 to-white/5 p-6 sm:p-8">
-            <div className="text-sm font-medium uppercase tracking-widest text-emerald-300">Geschatte besparing per jaar</div>
+          <div className="rounded-3xl border border-teal/30 bg-gradient-to-br from-teal/15 to-white/[0.03] p-6 sm:p-8">
+            <div className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-teal-bright">Geschatte besparing per jaar</div>
             <div className="mt-2 flex items-baseline gap-3">
-              <span className="text-5xl font-semibold text-white">{euro(result.besparing)}</span>
+              <span className="font-display text-5xl font-semibold text-white">{euro(result.besparing)}</span>
               {result.besparing > 0 && (
-                <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-sm font-semibold text-emerald-300">
+                <span className="rounded-full bg-teal/25 px-3 py-1 font-mono text-sm font-medium text-teal-bright">
                   −{Math.round(result.percentage)}%
                 </span>
               )}
             </div>
 
-            <div className="mt-6 space-y-3">
-              <div className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-3">
-                <span className="text-sm text-slate-300">Stookkosten met cv-ketel</span>
-                <span className="font-semibold text-white">{euro(result.gasKosten)}</span>
-              </div>
-              <div className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-3">
-                <span className="text-sm text-slate-300">Stookkosten met airco</span>
-                <span className="font-semibold text-emerald-300">{euro(result.aircoKosten)}</span>
-              </div>
-              <div className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-3">
-                <span className="text-sm text-slate-300">Stroomverbruik airco</span>
-                <span className="font-semibold text-white">{Math.round(result.stroomKwh).toLocaleString("nl-NL")} kWh</span>
-              </div>
-              <div className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-3">
-                <span className="text-sm text-slate-300">Minder CO₂-uitstoot</span>
-                <span className="font-semibold text-white">{Math.round(result.co2).toLocaleString("nl-NL")} kg</span>
-              </div>
+            <div className="mt-6 space-y-2.5">
+              {[
+                ["Stookkosten met cv-ketel", euro(result.gasKosten), "text-white"],
+                ["Stookkosten met airco", euro(result.aircoKosten), "text-teal-bright"],
+                ["Stroomverbruik airco", `${Math.round(result.stroomKwh).toLocaleString("nl-NL")} kWh`, "text-white"],
+                ["Minder CO₂-uitstoot", `${Math.round(result.co2).toLocaleString("nl-NL")} kg`, "text-white"],
+              ].map(([label, value, cls]) => (
+                <div key={label} className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-3">
+                  <span className="text-sm text-white/70">{label}</span>
+                  <span className={`font-mono text-sm font-medium ${cls}`}>{value}</span>
+                </div>
+              ))}
             </div>
 
             <a
               href="#contact"
-              className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600"
+              className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-teal px-6 py-3 text-sm font-semibold text-white transition hover:bg-teal-bright"
             >
               Vraag een advies op maat aan
             </a>
-            <p className="mt-3 text-center text-xs text-slate-400">
+            <p className="mt-3 text-center text-xs text-white/50">
               Indicatieve berekening. Werkelijke besparing hangt af van isolatie, gebruik en prijzen.
             </p>
           </div>
